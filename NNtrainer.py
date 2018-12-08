@@ -19,8 +19,8 @@ resolution of images
 """
 nx = 24
 ny = 56
-# nx = 192
-# ny = 448
+# nx = 240
+# ny = 560
 # nx = 600
 # ny = 1400
 
@@ -43,18 +43,20 @@ x_train/y_train_r,g are the red and green channels of the rgb pictures (blue par
 x_train = dl.load_images(training_dir, nx, ny)
 x_train0 = x_train
 x_train = dl.x_preprocessing(x_train)
-# x_train_r = x_train[:, :, 0]
-# x_train_g = x_train[:, :, 1]
+x_train_r = x_train[:, :, :, 0]
+x_train_g = x_train[:, :, :, 1]
 y_train = dl.load_images(label_dir, nx, ny)
 y_train = dl.y_preprocessing(y_train)
-# y_train_r = y_train[:, :, 0]
-# y_train_g = y_train[:, :, 1]
+y_train_r = y_train[:, :, :, 0]
+y_train_g = y_train[:, :, :, 1]
 x_test = dl.load_images(test_dir, nx, ny)
 x_test0 = x_test
 x_test = dl.x_preprocessing(x_test)
 
 # img_shape = x_train_r[0].shape
-img_shape = x_train[0].shape
+img_shape = (24, 56, 1)
+# img_shape = x_train[0].shape
+print(x_train_r.shape)
 
 """
 variables of Network: batch_Size, kernel_size, Dropout, weights, validation_split, epochs
@@ -64,11 +66,15 @@ validation_split_val = 0.15
 batch_size = 32
 epochs = 2
 
-
-
 for i in (2, 3):
     kernel_size = i
     # kernel_size = 3
+
+# Data augmentation:
+    image_datagen, image_array, label_array = dl.training_data_generator(x_train_g, x_train_r, y_train_g, y_train_r)
+
+    image_iterator = image_datagen.flow(image_array, label_array, batch_size=1,
+                                        save_to_dir='augmented_data')
 
     # networkreturn = networks.smallsegnetnetwork(img_shape, kernel_size,Dropout_rate)
     networkreturn = networks.twolayernetwork(img_shape, kernel_size, Dropout_rate)
@@ -80,15 +86,15 @@ for i in (2, 3):
 
     save_dir = 'models/validation_split_' + str(validation_split_val) + '/' + whichmodel + '/' + str(
         epochs) + '_epochs/' + 'Kernel=' + str(kernel_size)
-    print(save_dir)
-    model.compile(loss='binary_crossentropy',
-                  optimizer='adam',
-                  metrics=['accuracy'])
-
-    # history = model.fit(x_train_g, x_train_r, y_train_g, y_train_r, validation_split=0.15, batch_size=batch_size, nb_epoch=epochs, verbose=1)
-    history = model.fit(x_train, y_train, validation_split=0.15, batch_size=batch_size, nb_epoch=epochs, verbose=1)
 
 
+
+
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+    history = model.fit_generator(image_iterator, validation_split=0.15, batch_size=batch_size, nb_epoch=epochs,
+                                  verbose=1)
+    # history = model.fit(x_train, y_train, validation_split=0.15, batch_size=batch_size, nb_epoch=epochs, verbose=1)
 
     print(history.history.keys())
 
@@ -112,14 +118,8 @@ for i in (2, 3):
     plt.legend(['Train', 'Test'], loc='upper left')
     plt.savefig(os.path.join(save_dir, whichmodel + str(kernel_size) + 'loss_values.png'))
 
-
-
-
-
     model_save_dir = os.path.join(save_dir,
                                   whichmodel + str(kernel_size) + '(' + str(ny) + '*' + str(nx) + ').h5')
-
-
 
     model.save(model_save_dir)
 

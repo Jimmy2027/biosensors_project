@@ -5,9 +5,7 @@ from keras.layers import Dense, Dropout, Activation, Flatten
 from matplotlib import pyplot as plt
 
 
-def biggernetwork(img_shape, kernel_size,Dropout_rate):
-
-
+def biggernetwork(img_shape, kernel_size, Dropout_rate):
     model = Sequential()
 
     # Encoder Layers
@@ -64,7 +62,7 @@ def biggernetwork(img_shape, kernel_size,Dropout_rate):
     return generaltheoryofgravity
 
 
-def bignetwork(img_shape, kernel_size,Dropout_rate):
+def bignetwork(img_shape, kernel_size, Dropout_rate):
     model = Sequential()
 
     # Encoder Layers
@@ -113,12 +111,12 @@ def bignetwork(img_shape, kernel_size,Dropout_rate):
     return generaltheoryofgravity
 
 
-def twolayernetwork(img_shape, kernel_size,Dropout_rate):
+def twolayernetwork(img_shape, kernel_size, Dropout_rate):
     model = Sequential()
 
     model.add(Conv2D(32, kernel_size, activation='relu', padding='same', input_shape=img_shape))
     model.add(BatchNormalization())
-    model.add(Conv2D(2, kernel_size, activation='sigmoid', padding='same'))
+    model.add(Conv2D(1, kernel_size, activation='sigmoid', padding='same'))
     model.add(BatchNormalization())
 
     generaltheoryofgravity = [model, 'twolayernetwork']
@@ -126,7 +124,7 @@ def twolayernetwork(img_shape, kernel_size,Dropout_rate):
     return generaltheoryofgravity
 
 
-def semibignetwork(img_shape, kernel_size,Dropout_rate):
+def semibignetwork(img_shape, kernel_size, Dropout_rate):
     model = Sequential()
 
     # Encoder Layers
@@ -163,7 +161,7 @@ def semibignetwork(img_shape, kernel_size,Dropout_rate):
     return generaltheoryofgravity
 
 
-def smallsegnetwork(img_shape, kernel_size,Dropout_rate):
+def smallsegnetwork(img_shape, kernel_size, Dropout_rate):
     model = Sequential()
 
     # Encoder Layers
@@ -173,7 +171,6 @@ def smallsegnetwork(img_shape, kernel_size,Dropout_rate):
     model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(2, 2), padding='same'))
     model.add(Dropout(Dropout_rate))
-
 
     # Decoder Layers
     model.add(UpSampling2D((2, 2)))
@@ -189,8 +186,7 @@ def smallsegnetwork(img_shape, kernel_size,Dropout_rate):
     return generaltheoryofgravity
 
 
-
-def segnetwork(img_shape, kernel_size,Dropout_rate):
+def segnetwork(img_shape, kernel_size, Dropout_rate):
     model = Sequential()
 
     # Encoder Layers
@@ -271,4 +267,3 @@ def segnetwork(img_shape, kernel_size,Dropout_rate):
     generaltheoryofgravity = [model, 'segnetwork']
 
     return generaltheoryofgravity
-
