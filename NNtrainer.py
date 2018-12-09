@@ -17,12 +17,12 @@ from matplotlib import pyplot as plt
 """
 resolution of images
 """
-nx = 24
-ny = 56
-# nx = 192
-# ny = 448
-# nx = 600
-# ny = 1400
+# nx = 24
+# ny = 56
+# nx = 240
+# ny = 560
+nx = 600
+ny = 1400
 
 
 # main_dir = '/home/klugh/Documents/Python'         #etz computer
@@ -34,6 +34,7 @@ label_dir = 'labeled_images'
 training_dir = 'training_images'
 test_dir = 'test_images'
 
+
 """
 x_train: original pictures
 y_train: labeled pictures corresponding to x_train
@@ -43,18 +44,16 @@ x_train/y_train_r,g are the red and green channels of the rgb pictures (blue par
 x_train = dl.load_images(training_dir, nx, ny)
 x_train0 = x_train
 x_train = dl.x_preprocessing(x_train)
-# x_train_r = x_train[:, :, 0]
-# x_train_g = x_train[:, :, 1]
 y_train = dl.load_images(label_dir, nx, ny)
 y_train = dl.y_preprocessing(y_train)
-# y_train_r = y_train[:, :, 0]
-# y_train_g = y_train[:, :, 1]
 x_test = dl.load_images(test_dir, nx, ny)
-x_test0 = x_test
 x_test = dl.x_preprocessing(x_test)
 
-# img_shape = x_train_r[0].shape
-img_shape = x_train[0].shape
+
+xtrain_chunk, ytrain_chunk = dl.create_random_imagepart(x_train, y_train)
+
+img_shape = xtrain_chunk[0].shape
+print(img_shape)
 
 """
 variables of Network: batch_Size, kernel_size, Dropout, weights, validation_split, epochs
@@ -63,6 +62,7 @@ Dropout_rate = 0.5
 validation_split_val = 0.15
 batch_size = 32
 epochs = 2
+
 
 
 
@@ -85,8 +85,8 @@ for i in (2, 3):
                   optimizer='adam',
                   metrics=['accuracy'])
 
-    # history = model.fit(x_train_g, x_train_r, y_train_g, y_train_r, validation_split=0.15, batch_size=batch_size, nb_epoch=epochs, verbose=1)
-    history = model.fit(x_train, y_train, validation_split=0.15, batch_size=batch_size, nb_epoch=epochs, verbose=1)
+
+    history = model.fit(xtrain_chunk, ytrain_chunk, validation_split=0.15, batch_size=batch_size, nb_epoch=epochs, verbose=1)
 
 
 

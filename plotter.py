@@ -10,10 +10,10 @@ resolution of images:
 """
 # nx = 24
 # ny = 56
-nx = 192
-ny = 448
-# nx = 600
-# ny = 1400
+# nx = 192
+# ny = 448
+nx = 600
+ny = 1400
 
 main_dir = '/Users/Hendrik/OneDrive - ETHZ/Python/sensors_project/Sensors_project'
 model_dir = '/Users/Hendrik/Desktop/smallsegnetwork2(448*192).h5'
@@ -26,13 +26,10 @@ x_test:  original pictures without corresponding labeled pictures (used to creat
 x_test = dl.load_images(test_dir, nx, ny)
 x_test0 = x_test
 x_test = dl.x_preprocessing(x_test)
-x_test_r = x_test[:, :, 0]
-x_test_g = x_test[:, :, 1]
+
 
 model = load_model(model_dir)
-
-y_pred_r = model.predict(x_test_r)
-y_pred_g = model.predict(x_test_g)
+y_pred = model.predict(x_test)
 
 plt.figure(1)
 plt.imshow(x_test0[0])
@@ -42,8 +39,6 @@ num_images = 6
 
 nz = 3
 y = np.zeros((num_images, nx, ny, nz))
-y[:, :, :, 0] = y_pred_r
-y[:, :, :, 1] = y_pred_g
 plt.imshow(y[0])
 plt.show()
 threshold, upper, lower = 0.5, 1, 0

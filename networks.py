@@ -113,7 +113,7 @@ def bignetwork(img_shape, kernel_size,Dropout_rate):
     return generaltheoryofgravity
 
 
-def twolayernetwork(img_shape, kernel_size,Dropout_rate):
+def twolayernetwork(img_shape, kernel_size, Dropout_rate):
     model = Sequential()
 
     model.add(Conv2D(32, kernel_size, activation='relu', padding='same', input_shape=img_shape))
