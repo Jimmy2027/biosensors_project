@@ -52,8 +52,8 @@ x_test = dl.x_preprocessing(x_test)
 
 xtrain_chunk, ytrain_chunk = dl.create_random_imagepart(x_train, y_train)
 
-img_shape = xtrain_chunk[0].shape
-print(img_shape)
+img_shape = (256,256,2)
+print(xtrain_chunk.shape)
 
 """
 variables of Network: batch_Size, kernel_size, Dropout, weights, validation_split, epochs
@@ -61,7 +61,7 @@ variables of Network: batch_Size, kernel_size, Dropout, weights, validation_spli
 Dropout_rate = 0.5
 validation_split_val = 0.15
 batch_size = 32
-epochs = 2
+epochs = 200
 
 
 
@@ -70,15 +70,12 @@ for i in (2, 3):
     kernel_size = i
     # kernel_size = 3
 
-    # networkreturn = networks.smallsegnetnetwork(img_shape, kernel_size,Dropout_rate)
-    networkreturn = networks.twolayernetwork(img_shape, kernel_size, Dropout_rate)
-    # networkreturn = networks.smallsegnetwork(img_shape, kernel_size,Dropout_rate)
-    # networkreturn = testNN.testnetwork(img_shape, kernel_size,nx,ny)
+    networkreturn = networks.segnetwork(img_shape, kernel_size, Dropout_rate)
     model = networkreturn[0]
     whichmodel = networkreturn[1]
     model.summary()
 
-    save_dir = 'models/validation_split_' + str(validation_split_val) + '/' + whichmodel + '/' + str(
+    save_dir = 'models_part/validation_split_' + str(validation_split_val) + '/' + whichmodel + '/' + str(
         epochs) + '_epochs/' + 'Kernel=' + str(kernel_size)
     print(save_dir)
     model.compile(loss='binary_crossentropy',

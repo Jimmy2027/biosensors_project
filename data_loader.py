@@ -85,17 +85,28 @@ def create_random_imagepart(x_train, y_train):
 
     xtrain_chunk = np.empty((33, 256, 256, 2))
     ytrain_chunk = np.empty((33, 256, 256, 2))
+    x_training_data = np.empty((330,256,256,2))
+    y_training_data = np.empty((330,256,256,2))
 
     for i in range(0, 33):
+        for t in range(1, 10):
+            nx = random.randint(128, 472)
+            ny = random.randint(128, 1272)
+            xtrain_chunk[i, :, :, :] = x_train[i, nx - 128:nx + 128, ny - 128:ny + 128, :]
+            ytrain_chunk[i, :, :, :] = y_train[i, nx - 128:nx + 128, ny - 128:ny + 128, :]
+            np.append(x_training_data, xtrain_chunk, axis=0)
+            np.append(y_training_data, ytrain_chunk, axis=0)
+    return [x_training_data, y_training_data]
 
-        nx = random.randint(128, 472)
-        ny = random.randint(128, 1272)
-        xtrain_chunk[i, :, :, :] = x_train[i, nx - 128:nx + 128, ny - 128:ny + 128, :]
-        ytrain_chunk[i, :, :, :] = y_train[i, nx - 128:nx + 128, ny - 128:ny + 128, :]
 
-    return [xtrain_chunk, ytrain_chunk]
+
+"""
+600/256 = 2,34 
+1400/256 = 5,5
+=> need to partition x_test into 3*6 = 18 (256*256) parts with overlap
+
 
 
 """
 
-"""
+#TODO: xtest partitioning with overlap
