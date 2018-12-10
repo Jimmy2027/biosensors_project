@@ -74,22 +74,22 @@ def training_data_generator(image_array_r, image_array_g, label_array_r, label_a
     return image_datagen, image_array, label_array
 
 
-
 """
 nx: 128 bis (600-128)=472 
 ny: 128 bis (1400-128)=1272
 -> take random voxel and get 256*256 entourage
 """
 
-def create_random_imagepart(x_train, y_train):
 
+def create_random_imagepart(x_train, y_train):
+    t_range = 50
     xtrain_chunk = np.empty((33, 256, 256, 2))
     ytrain_chunk = np.empty((33, 256, 256, 2))
-    x_training_data = np.empty((330,256,256,2))
-    y_training_data = np.empty((330,256,256,2))
+    x_training_data = np.empty((33 * t_range, 256, 256, 2))
+    y_training_data = np.empty((33 * t_range, 256, 256, 2))
 
     for i in range(0, 33):
-        for t in range(1, 10):
+        for t in range(1, t_range):
             nx = random.randint(128, 472)
             ny = random.randint(128, 1272)
             xtrain_chunk[i, :, :, :] = x_train[i, nx - 128:nx + 128, ny - 128:ny + 128, :]
@@ -99,14 +99,51 @@ def create_random_imagepart(x_train, y_train):
     return [x_training_data, y_training_data]
 
 
-
-"""
-600/256 = 2,34 
-1400/256 = 5,5
-=> need to partition x_test into 3*6 = 18 (256*256) parts with overlap
-
+# TODO create zones so that at least one 256*256 part is taken from each zone (to have a less bigger likelihood that parts of the image are not taken)
 
 
 """
+=> need to partition x_test into (3*6 = 18)*6 (256*256) parts with overlap
+y - direction: 3 * 256*256 chunks (last one 344-600)
+x - direction: 6 * 256*256 chunks (last one 1144-1400)
+y_middles = 128, 128+256=384, 600-128= 472
+x_middles = 128, 384, 640, 896, 1152, 1400-128=1272
+"""
 
-#TODO: xtest partitioning with overlap
+
+def xtest_partitioning(x_test):
+    x_middles = [128, 384, 640, 896, 1152, 1272]
+    y_middles = [128, 384, 472]                                 #middles of each of the 108 chunks
+    xtest_chunks = np.empty((108, 256, 256, 2))
+    i=0
+    for t in range(0,5):
+
+        for x in x_middles:
+                for y in y_middles:
+                    xtest_chunks[i, :, :, :] = x_test[t, x - 128:x + 128, y - 128:y + 128, :]
+                    i=i+1
+    print(xtest_chunks.shape)
+    return xtest_chunks
+
+
+"""
+ypred_bits are stored such that: for every x_middle, 3 different y_middle values
+y_middles = 128, 128+256=384, 600-128= 472
+x_middles = 128, 384, 640, 896, 1152, 1400-128=1272
+"""
+def ypred_reconstruct(ypred_bits):
+
+    ypred = np.empty((6, 600, 1400, 2))
+    t = 0
+    for i in range(0, 5):
+        for x in range(0, 5):
+            for y in range(0, 2):               # ypred_bits has shape (108, 256, 256, 2) with 108 = 6*3*6
+                if y == 2:
+                    ypred[i, x * 128:x * 128 + 256, 344:600, :] = ypred_bits[t, :, :, :]                    # have to take into account overlap
+                if x == 5:
+                    ypred[i, 1144:1400, y * 128:y * 128 + 256, :] = ypred_bits[t, :, :, :]
+                ypred[i, x * 128:x * 128 + 256, y * 128:y * 128 + 256, :] = ypred_bits[t, :, :, :]   #ERROR could not broadcast input array from shape (256,256,2) into shape (216,256,2)
+                t = t+1
+                print(t)
+
+    return ypred

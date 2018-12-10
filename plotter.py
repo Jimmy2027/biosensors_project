@@ -12,11 +12,11 @@ resolution of images:
 # ny = 56
 # nx = 192
 # ny = 448
-nx = 600
-ny = 1400
+nx = 1400
+ny = 600
 
 main_dir = '/Users/Hendrik/OneDrive - ETHZ/Python/sensors_project/Sensors_project'
-model_dir = '/Users/Hendrik/Desktop/smallsegnetwork2(448*192).h5'
+model_dir = '/Users/Hendrik/OneDrive - ETHZ/Python/biosensors_project/models_part/validation_split_0.15/segnetwork/1_epochs/Kernel=3/segnetwork3(1400*600).h5'
 test_dir = os.path.join(main_dir, 'test_images')
 
 """
@@ -26,10 +26,15 @@ x_test:  original pictures without corresponding labeled pictures (used to creat
 x_test = dl.load_images(test_dir, nx, ny)
 x_test0 = x_test
 x_test = dl.x_preprocessing(x_test)
+xtest_chunks = dl.xtest_partitioning(x_test)   # 18 256*256 bits of x_test images
 
 
 model = load_model(model_dir)
-y_pred = model.predict(x_test)
+ypred_bits = model.predict(xtest_chunks)
+print(ypred_bits.shape)
+
+y_pred = dl.ypred_reconstruct(ypred_bits)
+
 
 plt.figure(1)
 plt.imshow(x_test0[0])
@@ -39,6 +44,7 @@ num_images = 6
 
 nz = 3
 y = np.zeros((num_images, nx, ny, nz))
+y[:,:,:,0:2] = y_pred
 plt.imshow(y[0])
 plt.show()
 threshold, upper, lower = 0.5, 1, 0

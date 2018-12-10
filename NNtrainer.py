@@ -61,7 +61,7 @@ variables of Network: batch_Size, kernel_size, Dropout, weights, validation_spli
 Dropout_rate = 0.5
 validation_split_val = 0.15
 batch_size = 32
-epochs = 200
+epochs = 1
 
 
 
