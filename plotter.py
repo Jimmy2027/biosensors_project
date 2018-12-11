@@ -23,19 +23,19 @@ test_dir = os.path.join(main_dir, 'test_images')
 x_test:  original pictures without corresponding labeled pictures (used to create a visual evaluation of Network with 
          plotter)
 """
-x_test = dl.load_images(test_dir, nx, ny)
+x_test = dl.load_images(test_dir, ny, nx)
 x_test0 = x_test
 x_test = dl.x_preprocessing(x_test)
+print("x_test shape = "+str(x_test.shape))
 xtest_chunks = dl.xtest_partitioning(x_test)   # 18 256*256 bits of x_test images
 
 
 model = load_model(model_dir)
 ypred_bits = model.predict(xtest_chunks)
-print(ypred_bits.shape)
 
-y_pred = dl.ypred_reconstruct(ypred_bits)
+y_pred= dl.ypred_reconstruct(ypred_bits)
 
-
+print("y_pred shape= "+ str(y_pred.shape))
 plt.figure(1)
 plt.imshow(x_test0[0])
 plt.show()
@@ -43,14 +43,14 @@ plt.show()
 num_images = 6
 
 nz = 3
-y = np.zeros((num_images, nx, ny, nz))
+y = np.zeros((num_images, ny, nx, nz))
 y[:,:,:,0:2] = y_pred
 plt.imshow(y[0])
 plt.show()
 threshold, upper, lower = 0.5, 1, 0
 y = np.where(y > threshold, upper, lower)
 y = 255 * y
-
+print("y shape = " + str(y.shape))
 for i in range(0, 6):
     plt.figure()
     plt.imshow(y[i])
