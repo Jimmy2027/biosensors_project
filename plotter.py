@@ -30,10 +30,11 @@ print("x_test shape = "+str(x_test.shape))
 xtest_chunks = dl.xtest_partitioning(x_test)   # 18 256*256 bits of x_test images
 
 
+
 model = load_model(model_dir)
 ypred_bits = model.predict(xtest_chunks)
 
-y_pred= dl.ypred_reconstruct(ypred_bits)
+y_pred = dl.ypred_reconstruct(ypred_bits)
 
 print("y_pred shape= "+ str(y_pred.shape))
 plt.figure(1)
@@ -56,15 +57,15 @@ for i in range(0, 6):
     plt.imshow(y[i])
     plt.show()
 
-plt.figure(figsize=(ny, nx))
-
-for i in range(0, 6):
-    # plot original image
-    ax = plt.subplot(2, num_images, i + 1)
-    plt.imshow(x_test0[i])
-
-    # plot reconstructed image
-    ax = plt.subplot(2, num_images, num_images + i + 1)
-    plt.imshow(y[i])
-
-plt.savefig('/Users/Hendrik/Desktop/th' + str(threshold) + '.png', bbox_inches='tight')
+# plt.figure(figsize=(ny, nx))
+#
+# for i in range(0, 6):
+#     # plot original image
+#     ax = plt.subplot(2, num_images, i + 1)
+#     plt.imshow(x_test0[i])
+#
+#     # plot reconstructed image
+#     ax = plt.subplot(2, num_images, num_images + i + 1)
+#     plt.imshow(y[i])
+#
+# plt.savefig('/Users/Hendrik/Desktop/th' + str(threshold) + '.png', bbox_inches='tight')

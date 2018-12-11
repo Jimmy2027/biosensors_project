@@ -52,8 +52,9 @@ x_test = dl.x_preprocessing(x_test)
 
 xtrain_chunk, ytrain_chunk = dl.create_random_imagepart(x_train, y_train)
 
-img_shape = (256,256,2)
-print(xtrain_chunk.shape)
+
+
+img_shape = (256, 256, 2)
 
 """
 variables of Network: batch_Size, kernel_size, Dropout, weights, validation_split, epochs
@@ -61,7 +62,7 @@ variables of Network: batch_Size, kernel_size, Dropout, weights, validation_spli
 Dropout_rate = 0.5
 validation_split_val = 0.15
 batch_size = 32
-epochs = 1
+epochs = 200
 
 
 
@@ -83,7 +84,7 @@ for i in (2, 3):
                   metrics=['accuracy'])
 
 
-    history = model.fit(xtrain_chunk, ytrain_chunk, validation_split=0.15, batch_size=batch_size, nb_epoch=epochs, verbose=1)
+    history = model.fit(xtrain_chunk, ytrain_chunk, validation_split=0.25, batch_size=batch_size, nb_epoch=epochs, verbose=1)
 
 
 
