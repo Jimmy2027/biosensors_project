@@ -34,7 +34,8 @@ def load_images(data_dir, nx, ny):
     return np.array(im_data)
 
 
-""" I am training the network on the green and red part of the RGB image. I guess that the blue part contains no information that is needed for the network
+""" I am training the network on the green and red part of the RGB image. I guess that the blue part contains no 
+    information that is needed for the network
 """
 
 
@@ -78,40 +79,32 @@ def training_data_generator(image_array_r, image_array_g, label_array_r, label_a
 ny: 128 bis (600-128)=472 
 nx: 128 bis (1400-128)=1272
 -> take random voxel and get 256*256 entourage
-shape = ny*nx
-
-take t_range 256*256 parts of each of the 33 images
+take num_of_imageparts of (256*256) parts of each of the 33 images
 """
 
 
-def create_random_imagepart(x_train, y_train):
-    t_range = 10
+def create_random_imagepart(x_train, y_train, num_of_imageparts):
     xtrain_chunk = np.empty((33, 256, 256, 2))
     ytrain_chunk = np.empty((33, 256, 256, 2))
-    x_training_data = np.empty((33 * t_range, 256, 256, 2))
-    y_training_data = np.empty((33 * t_range, 256, 256, 2))
+    x_training_data = np.empty((33 * num_of_imageparts, 256, 256, 2))
+    y_training_data = np.empty((33 * num_of_imageparts, 256, 256, 2))
     counter = 0
     for i in range(0, 33):
-        for t in range(1, t_range+1):
+        for t in range(1, num_of_imageparts + 1):
             ny = random.randint(128, 472)
             nx = random.randint(128, 1272)
             xtrain_chunk[i, :, :, :] = x_train[i, ny - 128:ny + 128, nx - 128:nx + 128, :]
             ytrain_chunk[i, :, :, :] = y_train[i, ny - 128:ny + 128, nx - 128:nx + 128, :]
-            # np.append(x_training_data, xtrain_chunk, axis=0)
             x_training_data[counter, :, :, :] = xtrain_chunk[i]
-            # np.append(y_training_data, ytrain_chunk, axis=0)
             y_training_data[i, :, :, :] = ytrain_chunk[i]
             print("counter = " + str(counter))
             counter += 1
 
-
-        print("x_training_data average = " + str(np.average(x_training_data)))
-
-
     return [x_training_data, y_training_data]
 
 
-# TODO create zones so that at least one 256*256 part is taken from each zone (to have a less bigger likelihood that parts of the image are not taken)
+# TODO create zones so that at least one 256*256 part is taken from each zone (to have a less bigger likelihood
+#  that parts of the image are not taken)
 
 
 """
@@ -122,21 +115,21 @@ y_middles = 128, 128+256=384, 600-128= 472
 x_middles = 128, 384, 640, 896, 1152, 1400-128=1272
 """
 
+
 def xtest_partitioning(x_test):
     x_middles = [128, 384, 640, 896, 1152, 1272]
-    y_middles = [128, 384, 472]                                 #middles of each of the 108 chunks
-    xtest_chunks = np.empty((108, 256, 256, 2))
-    i = 0
-    for t in range(0, 6):                                       # t is index of the 6 test images
+    y_middles = [128, 384, 472]  # middles of each of the 108 chunks
+    xtest_bits = np.empty((108, 256, 256, 2))
+    xtest_bits_index = 0         # has range(0, 109)
+    for test_images_index in range(0, 6):        # test_images_index is the index of the 6 test images
 
         for x in x_middles:
-                for y in y_middles:
-                    print("y_middle = "+str(y)+"       x_middle = " + str(x))
-                    xtest_chunks[i, :, :, :] = x_test[t, y - 128:y + 128, x - 128:x + 128, :]
-                    i = i+1
-    print(xtest_chunks.shape)
-    return xtest_chunks
-
+            for y in y_middles:
+                print("y_middle = " + str(y) + "       x_middle = " + str(x))
+                xtest_bits[xtest_bits_index, :, :, :] = x_test[test_images_index, y - 128:y + 128, x - 128:x + 128, :]
+                xtest_bits_index += 1
+    print(xtest_bits.shape)
+    return xtest_bits
 
 
 """
@@ -146,24 +139,23 @@ x_middles = 128, 384, 640, 896, 1152, 1400-128=1272
 r for rows range(0-600)
 c for column range(0-1400)
 """
-def ypred_reconstruct(ypred_bits):
-    c_middles = [128, 384, 640, 896, 1152, 1272]
-    r_middles = [128, 384, 472]
+
+
+def ypred_reconstruct(ypred_bits):  # ypred_bits has shape (108, 256, 256, 2) with 108 = 6*3*6
+    x_middles = [128, 384, 640, 896, 1152, 1272]
+    y_middles = [128, 384, 472]
     ypred = np.empty((6, 600, 1400, 2))
-    t = 0
-    for i in range(0, 6):                       # i is index of the 6 test images
-        for c in c_middles:
-            for r in r_middles:               # ypred_bits has shape (108, 256, 256, 2) with 108 = 6*3*6
-                print("t= " + str(t) +  "     i= " + str(i))
-                print("r= " + str(r) + "    c= " + str(c))
+    ypred_bits_index = 0  # has range(0, 109)
+    for image_index in range(0, 6):  # image_index is index of the 6 test images
+        for x in x_middles:
+            for y in y_middles:
+                print("ypred_bits_index= " + str(ypred_bits_index) + "     image_index= " + str(image_index))
+                print("y= " + str(y) + "    x= " + str(x))
 
+                print("ypred shape: " + str(ypred[image_index, y * 128:y * 128 + 256, x * 128:x * 128 + 256, :].shape))
+                ypred[image_index, y - 128:y + 128, x - 128:x + 128, :] = ypred_bits[ypred_bits_index, :, :, :]
 
-                print("ypred shape: " + str(ypred[i, r * 128:r * 128 + 256, c * 128:c * 128 + 256, :].shape))
-                ypred[i, r - 128:r + 128, c - 128:c + 128, :] = ypred_bits[t, :, :, :]
-
-
-                t = t+1
-
+                ypred_bits_index += 1
 
     return ypred
 

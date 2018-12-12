@@ -49,8 +49,12 @@ y_train = dl.y_preprocessing(y_train)
 x_test = dl.load_images(test_dir, nx, ny)
 x_test = dl.x_preprocessing(x_test)
 
+num_of_imageparts = 10                          # number of (256*256) image parts per original picture
 
-xtrain_chunk, ytrain_chunk = dl.create_random_imagepart(x_train, y_train)
+"""
+Create 10 bits for each of the 33 original x_train and y_train images
+"""
+xtrain_bits, ytrain_bits = dl.create_random_imagepart(x_train, y_train, num_of_imageparts)
 
 
 
@@ -65,11 +69,8 @@ batch_size = 32
 epochs = 200
 
 
-
-
 for i in (2, 3):
     kernel_size = i
-    # kernel_size = 3
 
     networkreturn = networks.segnetwork(img_shape, kernel_size, Dropout_rate)
     model = networkreturn[0]
@@ -84,7 +85,7 @@ for i in (2, 3):
                   metrics=['accuracy'])
 
 
-    history = model.fit(xtrain_chunk, ytrain_chunk, validation_split=0.25, batch_size=batch_size, nb_epoch=epochs, verbose=1)
+    history = model.fit(xtrain_bits, ytrain_bits, validation_split=0.25, batch_size=batch_size, nb_epoch=epochs, verbose=1)
 
 
 
