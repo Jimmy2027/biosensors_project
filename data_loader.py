@@ -22,7 +22,6 @@ def load_images(data_dir, nx, ny):
               o.startswith('.')]
 
     images.sort()
-    # np.sort(images)
 
     for image in images:
         image_path = os.path.join(data_dir, image)
@@ -88,16 +87,17 @@ def create_random_imagepart(x_train, y_train, num_of_imageparts):
     ytrain_chunk = np.empty((33, 256, 256, 2))
     x_training_data = np.empty((33 * num_of_imageparts, 256, 256, 2))
     y_training_data = np.empty((33 * num_of_imageparts, 256, 256, 2))
-    counter = 0
+    training_data_iterator = 0              # training_data_iterator has range(0,33*num_of_imageparts)
     for i in range(0, 33):
         for t in range(1, num_of_imageparts + 1):
             ny = random.randint(128, 472)
             nx = random.randint(128, 1272)
             xtrain_chunk[i, :, :, :] = x_train[i, ny - 128:ny + 128, nx - 128:nx + 128, :]
             ytrain_chunk[i, :, :, :] = y_train[i, ny - 128:ny + 128, nx - 128:nx + 128, :]
-            x_training_data[counter, :, :, :] = xtrain_chunk[i]
-            y_training_data[i, :, :, :] = ytrain_chunk[i]
-            counter += 1
+            x_training_data[training_data_iterator, :, :, :] = xtrain_chunk[i]
+            #y_training_data[i, :, :, :] = ytrain_chunk[i]
+            y_training_data[training_data_iterator, :, :, :] = ytrain_chunk[i]
+            training_data_iterator += 1
 
     return [x_training_data, y_training_data]
 

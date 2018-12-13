@@ -38,7 +38,8 @@ test_dir = 'test_images'
 """
 x_train: original pictures
 y_train: labeled pictures corresponding to x_train
-x_test:  original pictures without corresponding labeled pictures (used to create a visual evaluation of Network with plotter)
+x_test:  original pictures without corresponding labeled pictures (used to create a visual evaluation of Network with 
+plotter)
 x_train/y_train_r,g are the red and green channels of the rgb pictures (blue parts are not needed)
 """
 x_train = dl.load_images(training_dir, nx, ny)
@@ -58,7 +59,7 @@ xtrain_bits, ytrain_bits = dl.create_random_imagepart(x_train, y_train, num_of_i
 
 
 
-img_shape = (ny, nx, 2)
+img_shape = (256, 256, 2)
 
 """
 variables of Network: batch_Size, kernel_size, Dropout, weights, validation_split, epochs
@@ -72,7 +73,7 @@ epochs = 100
 for i in (2, 3):
     kernel_size = i
 
-    networkreturn = networks.segnetwork(img_shape, kernel_size, Dropout_rate)
+    networkreturn = networks.twolayernetwork(img_shape, kernel_size, Dropout_rate)
     model = networkreturn[0]
     whichmodel = networkreturn[1]
     model.summary()

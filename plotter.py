@@ -16,7 +16,7 @@ nx = 1400
 ny = 600
 
 main_dir = '/Users/Hendrik/OneDrive - ETHZ/Python/sensors_project/Sensors_project'
-model_dir = '/Users/Hendrik/OneDrive - ETHZ/Python/biosensors_project/models_part/validation_split_0.15/segnetwork/100_epochs/Kernel=3/segnetwork3(1400*600).h5'
+model_dir = '/Users/Hendrik/OneDrive - ETHZ/Python/biosensors_project/models_part/validation_split_0.25/segnetwork/100_epochs/Kernel=3/segnetwork3(1400*600).h5'
 test_dir = os.path.join(main_dir, 'test_images')
 
 """
@@ -32,6 +32,7 @@ xtest_chunks = dl.xtest_deconstruct(x_test)   # 18 256*256 bits of x_test images
 
 model = load_model(model_dir)
 ypred_bits = model.predict(xtest_chunks)
+print("std of ypred_bits = " + str(np.std(ypred_bits)))
 y_pred = dl.ypred_reconstruct(ypred_bits)
 
 plt.figure(1)
