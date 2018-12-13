@@ -97,7 +97,6 @@ def create_random_imagepart(x_train, y_train, num_of_imageparts):
             ytrain_chunk[i, :, :, :] = y_train[i, ny - 128:ny + 128, nx - 128:nx + 128, :]
             x_training_data[counter, :, :, :] = xtrain_chunk[i]
             y_training_data[i, :, :, :] = ytrain_chunk[i]
-            print("counter = " + str(counter))
             counter += 1
 
     return [x_training_data, y_training_data]
@@ -116,7 +115,7 @@ x_middles = 128, 384, 640, 896, 1152, 1400-128=1272
 """
 
 
-def xtest_partitioning(x_test):
+def xtest_deconstruct(x_test):
     x_middles = [128, 384, 640, 896, 1152, 1272]
     y_middles = [128, 384, 472]  # middles of each of the 108 chunks
     xtest_bits = np.empty((108, 256, 256, 2))
@@ -125,10 +124,8 @@ def xtest_partitioning(x_test):
 
         for x in x_middles:
             for y in y_middles:
-                print("y_middle = " + str(y) + "       x_middle = " + str(x))
                 xtest_bits[xtest_bits_index, :, :, :] = x_test[test_images_index, y - 128:y + 128, x - 128:x + 128, :]
                 xtest_bits_index += 1
-    print(xtest_bits.shape)
     return xtest_bits
 
 
@@ -149,10 +146,7 @@ def ypred_reconstruct(ypred_bits):  # ypred_bits has shape (108, 256, 256, 2) wi
     for image_index in range(0, 6):  # image_index is index of the 6 test images
         for x in x_middles:
             for y in y_middles:
-                print("ypred_bits_index= " + str(ypred_bits_index) + "     image_index= " + str(image_index))
-                print("y= " + str(y) + "    x= " + str(x))
 
-                print("ypred shape: " + str(ypred[image_index, y * 128:y * 128 + 256, x * 128:x * 128 + 256, :].shape))
                 ypred[image_index, y - 128:y + 128, x - 128:x + 128, :] = ypred_bits[ypred_bits_index, :, :, :]
 
                 ypred_bits_index += 1

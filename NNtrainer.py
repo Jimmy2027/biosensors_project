@@ -58,15 +58,15 @@ xtrain_bits, ytrain_bits = dl.create_random_imagepart(x_train, y_train, num_of_i
 
 
 
-img_shape = (256, 256, 2)
+img_shape = (ny, nx, 2)
 
 """
 variables of Network: batch_Size, kernel_size, Dropout, weights, validation_split, epochs
 """
 Dropout_rate = 0.5
-validation_split_val = 0.15
+validation_split_val = 0.25
 batch_size = 32
-epochs = 200
+epochs = 100
 
 
 for i in (2, 3):
@@ -85,7 +85,7 @@ for i in (2, 3):
                   metrics=['accuracy'])
 
 
-    history = model.fit(xtrain_bits, ytrain_bits, validation_split=0.25, batch_size=batch_size, nb_epoch=epochs, verbose=1)
+    history = model.fit(xtrain_bits, ytrain_bits, validation_split=validation_split_val, batch_size=batch_size, nb_epoch=epochs, verbose=1)
 
 
 
@@ -122,7 +122,7 @@ for i in (2, 3):
 
     model.save(model_save_dir)
 
-    # sendmail.sendmail(kernel_size, save_dir, whichmodel+str(kernel_size)+'('+str(ny)+'*'+str(nx)+').h5', whichmodel+str(kernel_size)+'accuracy_values.png',whichmodel+str(kernel_size)+'loss_values.png')
+    # sendmail.sendmail(kernel_size, save_dir, whichmodel+str(kernel_size)+'('+str(ny)+'*'+str(nx)+').h5', whichmodel+str(kernel_size)+'accuracy_values.png', whichmodel+str(kernel_size)+'loss_values.png')
 
 # TODO set small weights for black pixel, so that accuracy is low when network return all black
 # TODO make organised data saving dir (sql?)
