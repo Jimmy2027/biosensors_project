@@ -1,5 +1,6 @@
 import data_loader as dl
 import os
+import image_plotter
 from keras.models import load_model
 from matplotlib import pyplot as plt
 import numpy as np
@@ -14,6 +15,7 @@ resolution of images:
 # ny = 448
 nx = 1400
 ny = 600
+nz = 3          #RGB values
 
 main_dir = '/Users/Hendrik/OneDrive - ETHZ/Python/sensors_project/Sensors_project'
 model_dir = '/Users/Hendrik/OneDrive - ETHZ/Python/biosensors_project/models_part/validation_split_0.25/segnetwork/100_epochs/Kernel=3/segnetwork3(1400*600).h5'
@@ -44,25 +46,16 @@ num_images = 6
 nz = 3
 y = np.zeros((num_images, ny, nx, nz))
 y[:,:,:,0:2] = y_pred
-
-threshold, upper, lower = 0.5, 1, 0
+test = y
+threshold, upper, lower = 0.3, 1, 0
 y = np.where(y > threshold, upper, lower)
 y = 255 * y
 print("y shape = " + str(y.shape))
+
 for i in range(0, 6):
     plt.figure()
     plt.imshow(y[i])
     plt.show()
 
-# plt.figure(figsize=(ny, nx))
-#
-# for i in range(0, 6):
-#     # plot original image
-#     ax = plt.subplot(2, num_images, i + 1)
-#     plt.imshow(x_test0[i])
-#
-#     # plot reconstructed image
-#     ax = plt.subplot(2, num_images, num_images + i + 1)
-#     plt.imshow(y[i])
-#
-# plt.savefig('/Users/Hendrik/Desktop/th' + str(threshold) + '.png', bbox_inches='tight')
+results = np.append(x_test0, y, axis=0)
+image_plotter.show_images(results, threshold)

@@ -77,7 +77,7 @@ def training_data_generator(image_array_r, image_array_g, label_array_r, label_a
 """
 ny: 128 bis (600-128)=472 
 nx: 128 bis (1400-128)=1272
--> take random voxel and get 256*256 entourage
+-> take random voxel inside (nx,ny) and get 256*256 entourage
 take num_of_imageparts of (256*256) parts of each of the 33 images
 """
 
@@ -153,37 +153,3 @@ def ypred_reconstruct(ypred_bits):  # ypred_bits has shape (108, 256, 256, 2) wi
 
     return ypred
 
-# def ypred_reconstruct(ypred_bits):
-#     c_middles = [128, 384, 640, 896, 1152, 1272]
-#     r_middles = [128, 384, 472]
-#     ypred = np.empty((6, 600, 1400, 2))
-#     t = 0
-#     for i in range(0, 6):                       # i is index of the 6 test images
-#         for c in range(0, 6):
-#             for r in range(0, 3):               # ypred_bits has shape (108, 256, 256, 2) with 108 = 6*3*6
-#                 print("t= " + str(t) +  "     i= " + str(i))
-#                 print("r= " + str(r) + "    c= " + str(c))
-#
-#                 if r == 2 and c!=5:
-#                     print("ypred shape: " + str(ypred[i, 344:600, c * 128:c * 128 + 256, :].shape))
-#                     # ypred[i, 344:600, c * 128:c * 128 + 256, :] = ypred_bits[t, :, :, :]                    # have to take into account overlap
-#                     pass
-#
-#                 if c == 5 and r!=2:
-#                     print("ypred shape: " + str(ypred[i, r * 128:r * 128 + 256, 1144:1400, :].shape))
-#                     # ypred[i, r * 128:r * 128 + 256, 1144:1400, :] = ypred_bits[t, :, :, :]
-#                     pass
-#                 if c==5 and r==2:
-#                     print("ypred shape: " + str(ypred[i, 344:600, 1144:1400, :].shape))
-#                     # ypred[i, 344:600, 1144:1400, :] = ypred_bits[t, :, :, :]                                #part on the right bottom has overlap on both sides
-#                     pass
-#
-#                 else:
-#                     print("ypred shape: " + str(ypred[i, r * 128:r * 128 + 256, c * 128:c * 128 + 256, :].shape))
-#                     ypred[i, r * 128:r * 128 + 256, c * 128:c * 128 + 256, :] = ypred_bits[t, :, :, :]
-#
-#
-#                 t = t+1
-#
-#
-#     return ypred

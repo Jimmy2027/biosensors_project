@@ -59,9 +59,9 @@ def biggernetwork(img_shape, kernel_size,Dropout_rate):
     model.add(Dropout(Dropout_rate))
     model.add(Conv2D(2, kernel_size, activation='sigmoid', padding='same'))
 
-    generaltheoryofgravity = [model, 'biggernetwork']
+    networkreturn = [model, 'biggernetwork']
 
-    return generaltheoryofgravity
+    return networkreturn
 
 
 def bignetwork(img_shape, kernel_size,Dropout_rate):
@@ -108,9 +108,9 @@ def bignetwork(img_shape, kernel_size,Dropout_rate):
     model.add(Dropout(Dropout_rate))
     model.add(Conv2D(2, kernel_size, activation='sigmoid', padding='same'))
 
-    generaltheoryofgravity = [model, 'bignetwork']
+    networkreturn = [model, 'bignetwork']
 
-    return generaltheoryofgravity
+    return networkreturn
 
 
 def twolayernetwork(img_shape, kernel_size, Dropout_rate):
@@ -121,9 +121,9 @@ def twolayernetwork(img_shape, kernel_size, Dropout_rate):
     model.add(Conv2D(2, kernel_size, activation='sigmoid', padding='same'))
     model.add(BatchNormalization())
 
-    generaltheoryofgravity = [model, 'twolayernetwork']
+    networkreturn = [model, 'twolayernetwork']
 
-    return generaltheoryofgravity
+    return networkreturn
 
 
 def semibignetwork(img_shape, kernel_size,Dropout_rate):
@@ -158,9 +158,9 @@ def semibignetwork(img_shape, kernel_size,Dropout_rate):
     model.add(Dropout(Dropout_rate))
     model.add(Conv2D(2, kernel_size, activation='sigmoid', padding='same'))
 
-    generaltheoryofgravity = [model, 'semibignetwork']
+    networkreturn = [model, 'semibignetwork']
 
-    return generaltheoryofgravity
+    return networkreturn
 
 
 def smallsegnetwork(img_shape, kernel_size,Dropout_rate):
@@ -184,9 +184,9 @@ def smallsegnetwork(img_shape, kernel_size,Dropout_rate):
     model.add(BatchNormalization())
     model.add(Conv2D(2, 1, activation='sigmoid', padding='same'))
 
-    generaltheoryofgravity = [model, 'smallsegnetwork']
+    networkreturn = [model, 'smallsegnetwork']
 
-    return generaltheoryofgravity
+    return networkreturn
 
 
 
@@ -268,7 +268,7 @@ def segnetwork(img_shape, kernel_size,Dropout_rate):
     model.add(Dropout(Dropout_rate))
     model.add(Conv2D(2, 1, activation='sigmoid', padding='same'))
 
-    generaltheoryofgravity = [model, 'segnetwork']
+    networkreturn = [model, 'segnetwork']
 
-    return generaltheoryofgravity
+    return networkreturn
 
